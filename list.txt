@@ -1,0 +1,22 @@
+#
+#  Copyright (R) gameboy709494
+#  请参阅https://github.com/gameboy709494/ssautoscript
+#  
+
+# 你有一台境外的服务器用于翻墙，然后你还（有偿或无偿）提供了
+# 翻墙服务给其他人，当然了，由于数量不多，你打算只用一个文本
+# 文档来记录这些ss端口和密码。
+
+# 类似 /etc/fstab 和 /etc/shadow，本文件的组织方式一目了然。
+# 你当然可以根据你的需求来增加或删除本文件的栏目（列），
+# 相应地，你必须在work.sh里面进行恰当的修改。
+# 例如，你提供Jick翻墙服务，ss端口是10086，密码是IloveyouJick，
+# 则添加如下一行：
+# Jick		10086		IloveyouJick
+# #字符开头的行都将被忽略。下面才是这个文件的有效内容，记得按照
+# 你的需求修改哦！
+
+#title		port		password    
+
+tom		8388		tomspassword
+others		10086		otherspassword
