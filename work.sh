@@ -4,6 +4,8 @@
 #  
 #
 
+PID_PATH="/var/ssautoscript"
+
 
 #!/bin/bash
 
@@ -15,6 +17,11 @@ fi
 
 cmd=$1
 
+if [ ! -x $PID_PATH ]
+  then
+  mkdir -p $PID_PATH > /dev/null
+fi
+
 start () {
 
   grep -v ^# list.txt | while read line
@@ -24,6 +31,16 @@ start () {
   port=$(echo $line |  cut -d " " -f 2)
   passwd=$(echo $line |  cut -d " " -f 3)
   
+  pid=$(cat ${PID_PATH}/${title}.pid 2>/dev/null)
+  ps -ax | awk '{ print $1 }' | grep -e "^${pid}$" > /dev/null
+  
+  if [ $? == "0" ]
+  then
+    echo ${title}似乎已经运行，请检查pid为${pid}的进程。
+    continue
+  fi
+
+
   lsof -i:${port} > /dev/null
   
   if [ $? == "0"  ]
@@ -32,16 +49,8 @@ start () {
     continue
   fi
   
-  pid=$(cat ${title}.pid 2>/dev/null)
-  ps -ax | awk '{ print $1 }' | grep -e "^${pid}$" > /dev/null
-  
-  if [ $? == "0" ]
-  then
-    echo ${title}似乎已经运行，请检查pid为${pid}的进程。
-    continue
-  fi
-  
-  /usr/bin/ss-server -f ${title}.pid -p $port -k $passwd -m aes-256-cfb --fast-open $cmd
+
+  /usr/bin/ss-server -f ${PID_PATH}/${title}.pid -p $port -k $passwd -m aes-256-cfb --fast-open $cmd
   
   done 
 
@@ -51,7 +60,7 @@ start () {
 
 stop () {
 
-  ls *.pid | while read line
+  ls ${PID_PATH}/*.pid | while read line
   do
     kill $(cat $line)
     rm $line
