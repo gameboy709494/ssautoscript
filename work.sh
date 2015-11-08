@@ -31,9 +31,10 @@ start () {
   port=$(echo $line |  cut -d " " -f 2)
   passwd=$(echo $line |  cut -d " " -f 3)
   method=$(echo $line | cut -d " " -f 4) 
+
   pid=$(cat ${PID_PATH}/${title}.pid 2>/dev/null)
   ps -ax | awk '{ print $1 }' | grep -e "^${pid}$" > /dev/null
-  
+
   if [ $? == "0" ]
   then
     echo ${title}似乎已经运行，请检查pid为${pid}的进程。
@@ -50,7 +51,7 @@ start () {
   fi
   
 
-  /usr/bin/ss-server -f ${PID_PATH}/${title}.pid -p $port -k $passwd -m aes-256-cfb --fast-open $cmd
+  /usr/bin/ss-server -f ${PID_PATH}/${title}.pid -p $port -k $passwd -m $method --fast-open $cmd
   
   done 
 
