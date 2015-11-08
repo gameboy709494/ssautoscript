@@ -16,7 +16,7 @@
 # #字符开头的行都将被忽略。下面才是这个文件的有效内容，记得按照
 # 你的需求修改哦！
 
-#title		port		password    
+#title		port		password    	encryption_method
 
-tom		8388		tomspassword
-others		10086		otherspassword
+tom		8388		tomspassword	aes-256-cfb
+others		10086		otherspassword	aes-256-cfb
