@@ -4,7 +4,7 @@
 #  
 #
 
-PID_PATH="/var/ssautoscript"
+PID_PATH="/tmp/ssautoscript"
 
 
 #!/bin/bash
