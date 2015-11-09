@@ -4,7 +4,8 @@
 #  
 #
 
-PID_PATH="/tmp/ssautoscript"
+PID_PATH="/tmp/ss-local"
+CONFIG_FILE_PATH="ss-local.txt"
 
 
 #!/bin/bash
@@ -24,34 +25,36 @@ fi
 
 start () {
 
-  grep -v ^# list.txt | while read line
+  sed '/^ *$/d' $CONFIG_FILE_PATH | grep -v ^#  | while read line
   do
   
-  title=$(echo $line |  cut -d " " -f 1)
+  address=$(echo $line |  cut -d " " -f 1)
   port=$(echo $line |  cut -d " " -f 2)
   passwd=$(echo $line |  cut -d " " -f 3)
   method=$(echo $line | cut -d " " -f 4) 
+  local_port=$(echo $line | cut -d " " -f 5) 
+  
 
-  pid=$(cat ${PID_PATH}/${title}.pid 2>/dev/null)
+  pid=$(cat ${PID_PATH}/${address}.pid 2>/dev/null)
   ps -ax | awk '{ print $1 }' | grep -e "^${pid}$" > /dev/null
 
   if [ $? == "0" ]
   then
-    echo ${title}似乎已经运行，请检查pid为${pid}的进程。
+    echo ${address}似乎已经运行，请检查pid为${pid}的进程。
     continue
   fi
 
 
-  lsof -i:${port} > /dev/null
+  lsof -i:${local_port} > /dev/null
   
   if [ $? == "0"  ]
   then
-    echo 服务器端口${port}已被占用，跳过任务${title}。
+    echo 本机端口${local_port}已被占用，跳过任务${address}。
     continue
   fi
   
 
-  /usr/bin/ss-server -f ${PID_PATH}/${title}.pid -p $port -k $passwd -m $method --fast-open $cmd
+  /usr/bin/ss-local -f ${PID_PATH}/${address}.pid -s $address -p $port -k $passwd -m $method -b 0.0.0.0 -l $local_port --fast-open
   
   done 
 

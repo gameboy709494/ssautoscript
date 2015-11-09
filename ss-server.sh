@@ -24,7 +24,7 @@ fi
 
 start () {
 
-  grep -v ^# $CONFIG_FILE_PATH | while read line
+  sed '/^ *$/d' $CONFIG_FILE_PATH | grep -v ^#  | while read line
   do
   
   title=$(echo $line |  cut -d " " -f 1)
