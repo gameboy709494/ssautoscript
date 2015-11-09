@@ -5,7 +5,7 @@
 #
 
 PID_PATH="/tmp/ssautoscript"
-
+CONFIG_FILE_PATH="ss-server.txt"
 
 #!/bin/bash
 
@@ -24,7 +24,7 @@ fi
 
 start () {
 
-  grep -v ^# list.txt | while read line
+  grep -v ^# $CONFIG_FILE_PATH | while read line
   do
   
   title=$(echo $line |  cut -d " " -f 1)
